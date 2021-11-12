@@ -127,3 +127,14 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+files/formatted_data/architectures_hashcodes_dict.json
+files/formatted_data/cve_usage.json
+files/formatted_data/fcns.json
+files/formatted_data/hashcode_architecture.json
+files/formatted_data/opcodes.json
+files/source_data/52617_hash2fcns.json
+files/source_data/52617_hash2opcodes.json
+files/source_data/allFinal_architectures_hashcodes.json
+files/source_data/allFinal_fcns.json
+files/source_data/allFinal_opcodes.json
+files/source_data/hashcode_architecture.json
