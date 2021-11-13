@@ -1,6 +1,7 @@
-import json, sys
+import json, sys, os, datetime
 sys.path.append(r"C:\Users\Syuukakou\PycharmProjects\SCIS2022")
 # from src.plotMethods import plot_dict_data
+from src.common_functins import *
 from collections import Counter
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -8,6 +9,7 @@ import textwrap
 import matplotlib
 from pyvis.network import Network
 import networkx as nx
+from pprint import pprint
 
 
 """
@@ -67,14 +69,12 @@ def plot_dict_data(sources, save_path, title, xlabel, ylabel, fig_w, fig_h, rota
     plt.savefig(save_path)
     plt.show()
 
+# Pyvis Networkx
 def cve_relationship():
-    with open(r"files\formatted_data\hashcode_architecture.json", "r") as f:
-        hashes_archi = json.load(f)
+    hashes_archi = get_hashes_architecture()
     print(len(hashes_archi))
-    with open(r"files\formatted_data\cve_usage.json", "r") as f:
-        cve_usage = json.load(f)
-    with open(r"files\formatted_data\architectures_hashcodes_dict.json", "r") as f:
-        archi_hashes = json.load(f)
+    cve_usage = get_CVE_Usage()
+    archi_hashes = get_Architectures_hashes()
     
     cve_usages_NoneZero = {}
     for h in cve_usage:
@@ -132,7 +132,57 @@ def cve_usage_Statistics():
     plot_dict_data(cves_counts, r"files\resuls\Vulnerabilities Usage Statistics", "Statistics for Vulnerabilities Usage", "Vulnerabilities", "Counts", 20, 10, rotation=60, show_Barlabel=True, wrap_xticklabels=False)
 
 
+def cve_architecture_Relationship():
+    """
+    Plot Relationship between Vulnerabilities and Architectures
+    """
+    archi_hashes = get_Architectures_hashes()
+    cve_usage = get_CVE_Usage()
+    total_cves = []
+    for h in cve_usage:
+        total_cves.extend(cve_usage[h])
+    total_cves = list(set(total_cves))
+    total_colors = list(matplotlib.colors.cnames.keys())
+    colors = total_colors[:len(total_cves)]
+    cve_color = {}
+    for cve_name, color in zip(total_cves, colors):
+        cve_color[cve_name] = color
+
+    """
+    x: archi - y: cve - point size: counts
+    """
+    data = []
+    for archi in archi_hashes:
+        cves = []
+        for h in archi_hashes[archi]:
+            if h in cve_usage:
+                cves.extend(cve_usage[h])
+        cves_counter = dict(Counter(cves))
+        for cve_name, count in cves_counter.items():
+            data.append([archi, cve_name, count, cve_color[cve_name]])
+    pprint(data)
+    
+    Architectures = []
+    CVE_names = []
+    CVE_counts = []
+    CVE_colorType = []
+    for item in data:
+        Architectures.append(item[0])
+        CVE_names.append(item[1])
+        CVE_counts.append(item[2]/5)
+        CVE_colorType.append(item[3])
+    plt.figure(figsize=(15, 15))
+    plt.scatter(Architectures, CVE_names, s=CVE_counts, c=CVE_colorType)
+    plt.xticks(fontsize=20, rotation=30)
+    plt.yticks(fontsize=10)
+    plt.tight_layout()
+    plt.savefig(r"files\resuls\Relationship_Between_cve_architectures.png")
+    plt.show()
+
+
 if __name__ == "__main__":
-    graphs = cve_relationship()
-    print(len(graphs))
+    print(datetime.datetime.now())
+    # graphs = cve_relationship()
+    # print(len(graphs))
     # cve_usage_Statistics()
+    cve_architecture_Relationship()
