@@ -172,12 +172,13 @@ def cve_architecture_Relationship():
         CVE_names.append(item[1])
         CVE_counts.append(item[2]/5)
         CVE_colorType.append(item[3])
-    plt.figure(figsize=(15, 15))
+    plt.figure(figsize=(15, 10))
     plt.scatter(Architectures, CVE_names, s=CVE_counts, alpha=0.3, edgecolors="black")
+    # plt.bar(Architectures, CVE_names)
     plt.xticks(fontsize=20, rotation=30)
     plt.yticks(fontsize=10)
     plt.tight_layout()
-    plt.savefig(r"files\resuls\Relationship_Between_cve_architectures.png")
+    # plt.savefig(r"files\resuls\Relationship_Between_cve_architectures.png")
     plt.show()
 
 
