@@ -1,7 +1,7 @@
 import os, json, sys
 from collections import Counter
 from typing import OrderedDict
-from plotMethods import plot_dict_data
+from plotMethods import plot_dict_data, plot_pie_dict
 sys.path.append(r"C:\Users\Syuukakou\PycharmProjects\SCIS2022")
 import matplotlib.pyplot as plt
 
@@ -97,7 +97,7 @@ def plot_opcodesPer_Architecures():
         count += 1
 
     # plot
-    fig, axes = plt.subplots(2, int(len(archi_Top10_opcodes)/2), figsize=(30, 15))
+    fig, axes = plt.subplots(5, 2, figsize=(10, 15)) # int(len(archi_Top10_opcodes)/2
     fig.suptitle("Top 50 Frequently Used Opcodes for Each Architecture", x=0.5, y=0.998, fontsize=25)
     for i, ax in enumerate(axes.flatten()):
         if i in plot_data:
@@ -105,9 +105,11 @@ def plot_opcodesPer_Architecures():
             ax.set_title(plot_data[i]["architecture"])
             ax.tick_params('x', labelrotation=90, labelsize=8)
             ax.margins(x=0)
+            plt.ticklabel_format(style='plain', axis='y')
+            ax.set_yticklabels(['{:,}'.format(int(x)) for x in ax.get_yticks().tolist()])
     plt.tight_layout()
     plt.savefig(r"files\resuls\opcodes Statistics on Each Architecture.png", dpi=300)
-    # plt.show()
+    plt.show()
 
 """
 Function Call
@@ -173,8 +175,8 @@ def plot_fcnsPer_Architecures():
         count += 1
 
     # plot
-    fig, axes = plt.subplots(2, int(len(archi_Top10_fcns)/2), figsize=(30, 15))
-    fig.suptitle("Top 50 Frequently Used Function Calls for Each Architecture", x=0.5, y=0.998, fontsize=25)
+    fig, axes = plt.subplots(5, 2, figsize=(10, 15))
+    fig.suptitle("Top 50 Frequently Used Function Calls for Each Architecture", x=0.5, y=0.998, fontsize=20)
     for i, ax in enumerate(axes.flatten()):
         if i in plot_data:
             ax.bar(plot_data[i]["fcns_names"], plot_data[i]["fcns_counts"])
@@ -183,7 +185,32 @@ def plot_fcnsPer_Architecures():
             ax.margins(x=0)
     plt.tight_layout()
     plt.savefig(r"files\resuls\Fcns Statistics on Each Architecture.png", dpi=300)
+    plt.show()
+
+def label_statistics():
+    with open(r"files\formatted_data\hashes_labels.json", "r") as f:
+        data = json.load(f)
+    labels = list(data.values())
+    labels_statis = []
+    for l in labels:
+        if l.startswith("SINGLETON"):
+            labels_statis.append("SINGLETON")
+        else:
+            labels_statis.append(l)
+    labels_counts = dict(sorted(Counter(labels_statis).items(), key=lambda item: item[1], reverse=True))
+    plot_data = {}
+    count = 0
+    for l in labels_counts:
+        if labels_counts[l] > 900:
+            plot_data[l] = labels_counts[l]
+        else:
+            count += labels_counts[l]
+    plot_data["Others"] = count
+    # print(plot_data)
+    plot_pie_dict(plot_data, r"files\resuls\statistics\Label Statistics.png")
+    # plt.bar(list(labels_counts.keys()), list(labels_counts.values()))
     # plt.show()
+    
 
 
 if __name__ == "__main__":
@@ -202,4 +229,5 @@ if __name__ == "__main__":
     Fcns
     """
     # plot_Top_fcns_Statistics()
-    plot_fcnsPer_Architecures()
+    # plot_fcnsPer_Architecures()
+    # label_statistics()

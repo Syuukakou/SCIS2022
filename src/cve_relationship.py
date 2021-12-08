@@ -42,7 +42,8 @@ def plot_dict_data(sources, save_path, title, xlabel, ylabel, fig_w, fig_h, rota
     # Width, height in inches
     plt.figure(figsize=(fig_w, fig_h))
     # sns.set_style("whitegrid")
-    ax = sns.barplot(x=x_data, y=y_data)
+    ax = sns.barplot(x=x_data, y=y_data, color="#1f77b4")
+
     ax.set(xlabel=xlabel, ylabel=ylabel)
     ax.set_title(title)
     # plt.xticks(rotation=rotation)
@@ -129,7 +130,7 @@ def cve_usage_Statistics():
         cves.extend(cve_usage[h])
     cves_counts = dict(sorted(Counter(cves).items(), key=lambda item: item[1], reverse=True))
     # plot data
-    plot_dict_data(cves_counts, r"files\resuls\Vulnerabilities Usage Statistics", "Statistics for Vulnerabilities Usage", "Vulnerabilities", "Counts", 20, 10, rotation=60, show_Barlabel=True, wrap_xticklabels=False)
+    plot_dict_data(cves_counts, r"files\resuls\statistics\Vulnerabilities Usage Statistics.png", "Statistics for Vulnerabilities Usage", "Vulnerabilities", "Counts", 20, 10, rotation=60, show_Barlabel=True, wrap_xticklabels=False)
 
 
 def cve_architecture_Relationship():
@@ -172,7 +173,7 @@ def cve_architecture_Relationship():
         CVE_counts.append(item[2]/5)
         CVE_colorType.append(item[3])
     plt.figure(figsize=(15, 15))
-    plt.scatter(Architectures, CVE_names, s=CVE_counts, c=CVE_colorType)
+    plt.scatter(Architectures, CVE_names, s=CVE_counts, alpha=0.3, edgecolors="black")
     plt.xticks(fontsize=20, rotation=30)
     plt.yticks(fontsize=10)
     plt.tight_layout()

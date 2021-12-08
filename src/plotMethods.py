@@ -87,10 +87,15 @@ def plot_dict_data_DoubleBar(sourcedata, save_path, title, xlabel, ylabel, fig_w
         plt.show()
 
 
-def plot_pie_dict(dict_data):
+def plot_pie_dict(dict_data, save_path):
     data = list(dict_data.values())
     labels = list(dict_data.keys())
 
     colors = sns.color_palette("pastel")
-    plt.pie(data, labels=labels, colors=colors)
+    plt.pie(data, labels=labels, colors=colors, autopct='%1.0f%%')
+    plt.savefig(save_path)
     plt.show()
+
+"""
+vaddr=0x00000040 paddr=0x00000040 ord=011 fwd=NONE sz=11 bind=GLOBAL type=FUNC name=int_cmp
+"""
