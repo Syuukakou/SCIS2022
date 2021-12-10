@@ -29,6 +29,7 @@ def analysis():
     print(len(years_hashes["before_2018"]), len(years_hashes["from_2019"]))
     # with open(r"files\formatted_data\before_2018AND_from_2019.json", "w") as f:
     #     json.dump(years_hashes, f)
+    return years_hashes
 
 def year_cve_analysis():
     with open(r"files\formatted_data\before_2018AND_from_2019.json", "r") as f:
@@ -67,7 +68,8 @@ def year_cve_analysis():
     df = pd.DataFrame(plot_data[1:], columns=plot_data[0])
     print(df)
     plt.figure(figsize=(15, 10))
-    ax = sns.barplot(data=df, x="cve", y='counts', hue='first_seen')
+    # ax = sns.barplot(data=df, x="cve", y='counts', hue='first_seen')
+    ax = sns.lineplot(data=df, x="cve", y='counts', hue='first_seen')
     for p in ax.patches:
         ax.annotate("%.0f" % p.get_height(), (p.get_x() + p.get_width() / 2., p.get_height()),
                     ha='center', va='center', fontsize=5, color='black', xytext=(0, 5),
@@ -75,8 +77,8 @@ def year_cve_analysis():
     plt.legend(loc='upper right')
     plt.xticks(rotation=90, ha='left')
     plt.tight_layout()
-    plt.savefig(r"files\resuls\statistics\cve_firstSeen.png", dpi=1200)
-    # plt.show()
+    # plt.savefig(r"files\resuls\statistics\cve_firstSeen.png", dpi=1200)
+    plt.show()
 
 
 if __name__ == "__main__":
